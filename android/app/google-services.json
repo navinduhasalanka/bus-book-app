@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "48521901983",
+    "project_id": "bus-book-2",
+    "storage_bucket": "bus-book-2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:48521901983:android:322f1bdc17811f5157afaa",
+        "android_client_info": {
+          "package_name": "com.busbook2.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDD7fNHp575auik5xdIut_C0lST3Z_W6u4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
