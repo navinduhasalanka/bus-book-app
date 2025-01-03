@@ -28,7 +28,7 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 10.0),
                   Text(
-                    'Enter personal details to your account',
+                    'Enter personal details to your account.',
                     style: TextStyle(
                       color: Colors.white,
                     ),
