@@ -1,5 +1,4 @@
 import 'package:bus_book/screens/welcome/signin_screen.dart';
-import 'package:bus_book/screens/welcome/signup_screen.dart';
 import 'package:bus_book/widgets/welcome_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
