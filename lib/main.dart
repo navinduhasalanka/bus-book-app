@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false, // remove debug banner
       title: 'Flutter Demo',
       theme: ThemeData(),
-      home: const HomeScreen()
+      home: const NavigationMenu()
     );
   }
 }

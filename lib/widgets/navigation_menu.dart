@@ -1,3 +1,8 @@
+import 'package:bus_book/screens/pages/booking_screen.dart';
+import 'package:bus_book/screens/pages/home_screen.dart';
+import 'package:bus_book/screens/pages/profile_screen.dart';
+import 'package:bus_book/screens/pages/setting_screen.dart';
+import 'package:bus_book/widgets/welcome_scaffold.dart';
 import 'package:flutter/material.dart';
 
 class NavigationMenu extends StatefulWidget {
@@ -12,10 +17,10 @@ class _NavigationMenuState extends State<NavigationMenu> {
 
   // A list of text widgets corresponding to each page
   final List<Widget> _pages = const [
-    Text('Page 1', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-    Text('Page 2', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-    Text('Page 3', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-    Text('Page 4', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+    HomeScreen(),
+    BookingScreen(),
+    SettingScreen(),
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -28,11 +33,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Navigation Menu'),
-          elevation: 0,
-        ),
-        body: Center(child: _pages[_selectedIndex]), // Show selected page
+        body: (Center(child: _pages[_selectedIndex])), // Show selected page
         bottomNavigationBar: BottomAppBar(
           shape: const CircularNotchedRectangle(),
           notchMargin: 10,

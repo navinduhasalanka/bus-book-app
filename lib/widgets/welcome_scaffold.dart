@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class WelcomeScaffold extends StatelessWidget {
   const WelcomeScaffold({super.key, this.child});
 
-final Widget? child;
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
@@ -16,12 +16,21 @@ final Widget? child;
       extendBodyBehindAppBar: true,
       body: Stack(
         children: [
-          Image.asset(
-            'assets/welcome.png',
-            fit: BoxFit.cover,
+          // Use a gradient for the background
+          Container(
             width: double.infinity,
             height: double.infinity,
-            
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0xFF001f54), // Dark blue
+                  Color(0xFF003f88), // Medium blue
+                  Color(0xFF00509e), // Lighter blue
+                ],
+              ),
+            ),
           ),
           SafeArea(
             child: child!,
