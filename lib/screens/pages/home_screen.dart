@@ -1,3 +1,4 @@
+import 'package:bus_book/widgets/ticket_view.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -225,14 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: double.infinity,
                   color: const Color(0xFFd1d0d6), // Darker grey solid color
                   child: const Center(
-                    child: Text(
-                      'Home screen',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
+                    child: TicketView(),
                   ),
                 ),
               ),
