@@ -16,6 +16,14 @@ class _HomeScreenState extends State<HomeScreen> {
   String? _selectedFromStation;
   String? _selectedToStation;
 
+  // Dummy ticket data
+  final List<Map<String, dynamic>> tickets = [
+    {'id': 1},
+    {'id': 2},
+    {'id': 3},
+    {'id': 4},
+  ];
+
   // Function to show date picker and update the selected date
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -225,9 +233,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Container(
                   width: double.infinity,
                   color: const Color(0xFFd1d0d6), // Darker grey solid color
-                  child: const Center(
-                    child: TicketView(),
-                  ),
+                  child: tickets.isEmpty
+                      ? const Center(
+                          child: Text('No tickets available'),
+                        )
+                      : ListView.separated(
+                          padding: const EdgeInsets.all(16),
+                          itemCount: tickets.length,
+                          itemBuilder: (context, index) {
+                            return TicketView();
+                          },
+                          separatorBuilder: (context, index) => const SizedBox(height: 16),
+                        ),
                 ),
               ),
             ],
@@ -250,7 +267,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   } else {
                     // Proceed to find buses
-                    // Add your logic here
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Finding buses...')),
                     );

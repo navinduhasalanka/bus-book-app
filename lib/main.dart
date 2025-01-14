@@ -3,6 +3,7 @@ import 'package:bus_book/screens/pages/home_screen.dart';
 import 'package:bus_book/screens/welcome/welcome_screen.dart';
 import 'package:bus_book/widgets/navigation_menu.dart';
 import 'package:bus_book/widgets/nwew.dart';
+import 'package:bus_book/widgets/ticket_view.dart';
 import 'package:bus_book/widgets/welcome_scaffold.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';

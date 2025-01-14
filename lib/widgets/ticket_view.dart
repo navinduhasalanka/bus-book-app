@@ -6,7 +6,7 @@ class TicketView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      body: SingleChildScrollView( // Wrap with SingleChildScrollView
         child: Container(
           margin: const EdgeInsets.all(16),
           padding: const EdgeInsets.all(16),
