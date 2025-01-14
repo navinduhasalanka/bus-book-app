@@ -99,106 +99,33 @@ class SeatView extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
                   children: [
-                    for (int i = 0; i < 51; i += 4)
+                    // Generate rows of seats (rows with 4 seats each except the last row)
+                    for (int i = 0; i < 44; i += 4)
                       Column(
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              // Left column seats
                               for (int j = 0; j < 2; j++)
-                                if (i + j < 51)
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              DetailPage(seatNumber: i + j + 1),
-                                        ),
-                                      );
-                                    },
-                                    child: Container(
-                                      width: 50,
-                                      height: 60,
-                                      margin: const EdgeInsets.only(bottom: 12),
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        border: Border.all(color: Colors.grey),
-                                        color: Colors.white,
-                                      ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          const Icon(
-                                            Icons.event_seat,
-                                            size: 20,
-                                            color: Colors.grey,
-                                          ),
-                                          Text(
-                                            '${i + j + 1}',
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                              // Middle space
+                                _buildSeat(context, i + j + 1),
+                              // Middle space only for non-last rows
                               const SizedBox(width: 20),
-                              // Right column seats
                               for (int j = 2; j < 4; j++)
-                                if (i + j < 51)
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              DetailPage(seatNumber: i + j + 1),
-                                        ),
-                                      );
-                                    },
-                                    child: Container(
-                                      width: 50,
-                                      height: 60,
-                                      margin: const EdgeInsets.only(bottom: 12),
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        border: Border.all(color: Colors.grey),
-                                        color: Colors.white,
-                                      ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          const Icon(
-                                            Icons.event_seat,
-                                            size: 20,
-                                            color: Colors.grey,
-                                          ),
-                                          Text(
-                                            '${i + j + 1}',
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
+                                _buildSeat(context, i + j + 1),
                             ],
                           ),
-                          // Add space between rows of seats
                           const SizedBox(height: 16),
                         ],
                       ),
+
+                    // Last row with 5 seats (no middle gap)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        for (int i = 44; i < 49; i++)
+                          _buildSeat(context, i + 1),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -241,6 +168,46 @@ class SeatView extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSeat(BuildContext context, int seatNumber) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailPage(seatNumber: seatNumber),
+          ),
+        );
+      },
+      child: Container(
+        width: 50,
+        height: 60,
+        margin: const EdgeInsets.only(bottom: 12),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8.0),
+          border: Border.all(color: Colors.grey),
+          color: Colors.white,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.event_seat,
+              size: 20,
+              color: Colors.grey,
+            ),
+            Text(
+              '$seatNumber',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

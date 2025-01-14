@@ -44,8 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // Calculate button position based on screen width
     double screenWidth = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      body: Stack(
+    return Stack(
         children: [
           Column(
             children: [
@@ -238,12 +237,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Text('No tickets available'),
                         )
                       : ListView.separated(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.only( top: 16, bottom: 0,left: 0,right: 0),
                           itemCount: tickets.length,
                           itemBuilder: (context, index) {
                             return TicketView();
                           },
-                          separatorBuilder: (context, index) => const SizedBox(height: 16),
+                          separatorBuilder: (context, index) => const SizedBox(height: 0),
                         ),
                 ),
               ),
@@ -291,7 +290,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
-      ),
-    );
+      );
+    
   }
 }
