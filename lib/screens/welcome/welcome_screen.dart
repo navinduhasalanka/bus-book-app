@@ -56,7 +56,7 @@ class WelcomeScreen extends StatelessWidget {
                         buttonText: 'Sign up',
                         onTap: SignUpScreen(),
                         color: Colors.white,
-                        textColor: Colors.blue,
+                        textColor: Color(0xFF9E0000),
                       ),
                     ),
                   ],

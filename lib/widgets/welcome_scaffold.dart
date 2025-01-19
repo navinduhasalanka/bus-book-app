@@ -25,9 +25,9 @@ class WelcomeScaffold extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Color(0xFF001f54), // Dark blue
-                  Color(0xFF003f88), // Medium blue
-                  Color(0xFF00509e), // Lighter blue
+                  Color(0xFF540000), // Dark red
+                  Color(0xFF880000), // Medium red
+                  Color(0xFF9E0000), // Lighter red
                 ],
               ),
             ),

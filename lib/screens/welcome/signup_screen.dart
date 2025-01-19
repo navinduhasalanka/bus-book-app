@@ -49,7 +49,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             'Get Started',
                             style: TextStyle(
                               fontSize: 30.0,
-                              color: Colors.blue,
+                              color: Color(0xFF9E0000),
                               fontWeight: FontWeight.w900,
                             ),
                           ),
@@ -304,7 +304,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 child: const Text(
                                   'Sign in',
                                   style: TextStyle(
-                                    color: Colors.blue,
+                                    color: Color(0xFF9E0000),
                                   ),
                                 ),
                               )

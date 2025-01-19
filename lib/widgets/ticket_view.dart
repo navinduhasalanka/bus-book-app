@@ -16,7 +16,7 @@ class TicketView extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: Colors.blue[800]!, // Border color
+            color: const Color(0xFF9E0000), // Border color
             width: 2.0, // Border width
           ),
           boxShadow: [
@@ -31,7 +31,7 @@ class TicketView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
@@ -39,7 +39,7 @@ class TicketView extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.blue[800],
+                    color: Color(0xFF9E0000),
                   ),
                 ),
               ],
@@ -61,7 +61,7 @@ class TicketView extends StatelessWidget {
                     Transform.translate(
                       offset: const Offset(0, 12),
                       child: Icon(Icons.directions_bus,
-                          color: Colors.blue[800], size: 30),
+                          color: Color(0xFF9E0000), size: 30),
                     ),
                     const Spacer(),
                     Text(
@@ -164,7 +164,7 @@ class TicketView extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue[800],
+                    backgroundColor: Color(0xFF9E0000),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
