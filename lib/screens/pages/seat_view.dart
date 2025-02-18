@@ -29,10 +29,10 @@ class SeatView extends StatelessWidget {
             color: Colors.grey[200],
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: const [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
+                  children: [
                     Text(
                       'SAMARASINGHE TRAVELS ',
                       style: TextStyle(
@@ -49,10 +49,10 @@ class SeatView extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
+                  children: [
                     Text(
                       'Matara - Kaduwela',
                       style: TextStyle(
@@ -74,23 +74,30 @@ class SeatView extends StatelessWidget {
           ),
 
           // Section 2: Front Label
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(8.0),
-            color: Colors.grey[300],
-            child: const Center(
-              child: Text(
-                'Front',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey,
+          const SizedBox(height: 8.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12.0),
+              decoration: BoxDecoration(
+                color: Colors.red[100],
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: const Center(
+                child: Text(
+                  'Front',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),
           ),
 
           // Add space between "Front" label and the seat grid
-          const SizedBox(height: 16.0),
+          const SizedBox(height: 8.0),
 
           // Section 3: Scrollable Seat Grid
           Expanded(
@@ -107,11 +114,11 @@ class SeatView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               for (int j = 0; j < 2; j++)
-                                _buildSeat(context, i + j + 1),
+                                _buildSeat(i + j + 1),
                               // Middle space only for non-last rows
                               const SizedBox(width: 20),
                               for (int j = 2; j < 4; j++)
-                                _buildSeat(context, i + j + 1),
+                                _buildSeat(i + j + 1),
                             ],
                           ),
                           const SizedBox(height: 16),
@@ -123,7 +130,7 @@ class SeatView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         for (int i = 44; i < 49; i++)
-                          _buildSeat(context, i + 1),
+                          _buildSeat(i + 1),
                       ],
                     ),
                   ],
@@ -172,63 +179,43 @@ class SeatView extends StatelessWidget {
     );
   }
 
-  Widget _buildSeat(BuildContext context, int seatNumber) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailPage(seatNumber: seatNumber),
+  Widget _buildSeat(int seatNumber) {
+    // Define the set of seat numbers to be colored red
+    Set<int> redSeats = {4, 7, 27, 43, 23, 34};
+
+    // Check if the current seat number is in the set of red seats
+    bool isRedSeat = redSeats.contains(seatNumber);
+
+    // Colors for the seat and border
+    Color borderColor = isRedSeat ? Colors.red : Colors.green;
+    Color seatBackgroundColor = isRedSeat ? Colors.red[100]! : Colors.green[100]!;
+
+    return Container(
+      width: 60,
+      height: 70,
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(color: borderColor), // Border color for the seat
+        color: seatBackgroundColor, // Seat background color
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.event_seat,
+            size: 24,
+            color: Colors.black, // Icon color for all seats
           ),
-        );
-      },
-      child: Container(
-        width: 50,
-        height: 60,
-        margin: const EdgeInsets.only(bottom: 12),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8.0),
-          border: Border.all(color: Colors.grey),
-          color: Colors.white,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.event_seat,
-              size: 20,
-              color: Colors.grey,
+          Text(
+            '$seatNumber',
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+              color: Colors.black, // Text color for all seats
             ),
-            Text(
-              '$seatNumber',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class DetailPage extends StatelessWidget {
-  final int seatNumber;
-
-  const DetailPage({super.key, required this.seatNumber});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Seat $seatNumber'),
-      ),
-      body: Center(
-        child: Text(
-          'Details for Seat $seatNumber',
-          style: const TextStyle(fontSize: 24),
-        ),
+          ),
+        ],
       ),
     );
   }
