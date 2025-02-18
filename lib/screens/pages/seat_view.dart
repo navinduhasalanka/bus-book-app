@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
 
-class SeatView extends StatelessWidget {
+class SeatView extends StatefulWidget {
   const SeatView({super.key});
+
+  @override
+  _SeatViewState createState() => _SeatViewState();
+}
+
+class _SeatViewState extends State<SeatView> {
+  Set<int> selectedSeats = {}; // Store selected seats
+  Set<int> bookedSeats = {4, 7, 27, 43, 23, 34}; // Booked seats (red)
+  int seatPrice = 500; // Price per seat
+  int maxSeats = 10; // Maximum number of seats a user can select
 
   @override
   Widget build(BuildContext context) {
@@ -9,9 +19,7 @@ class SeatView extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'Select Seat',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         leading: IconButton(
@@ -34,18 +42,12 @@ class SeatView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'SAMARASINGHE TRAVELS ',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+                      'SAMARASINGHE TRAVELS',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                     Text(
                       '08:00 AM',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                   ],
                 ),
@@ -55,17 +57,11 @@ class SeatView extends StatelessWidget {
                   children: [
                     Text(
                       'Matara - Kaduwela',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
+                      style: TextStyle(fontSize: 14, color: Colors.grey),
                     ),
                     Text(
                       'January 14, 2025',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
+                      style: TextStyle(fontSize: 14, color: Colors.grey),
                     ),
                   ],
                 ),
@@ -87,16 +83,12 @@ class SeatView extends StatelessWidget {
               child: const Center(
                 child: Text(
                   'Front',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
                 ),
               ),
             ),
           ),
 
-          // Add space between "Front" label and the seat grid
           const SizedBox(height: 8.0),
 
           // Section 3: Scrollable Seat Grid
@@ -106,7 +98,6 @@ class SeatView extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
                   children: [
-                    // Generate rows of seats (rows with 4 seats each except the last row)
                     for (int i = 0; i < 44; i += 4)
                       Column(
                         children: [
@@ -115,7 +106,6 @@ class SeatView extends StatelessWidget {
                             children: [
                               for (int j = 0; j < 2; j++)
                                 _buildSeat(i + j + 1),
-                              // Middle space only for non-last rows
                               const SizedBox(width: 20),
                               for (int j = 2; j < 4; j++)
                                 _buildSeat(i + j + 1),
@@ -139,7 +129,7 @@ class SeatView extends StatelessWidget {
             ),
           ),
 
-          // Section 4: Bottom Bar
+          // Section 4: Bottom Bar (Seat info + price remains)
           Container(
             color: Colors.white,
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -148,27 +138,60 @@ class SeatView extends StatelessWidget {
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
+                    // Display selected seats dynamically (Scrollable Row)
+                    selectedSeats.isEmpty
+                        ? const Text(
+                            'No seats selected',
+                            style: TextStyle(color: Colors.grey),
+                          )
+                        : SizedBox(
+                            height: 35, // Keeps height fixed
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal, // Enables horizontal scrolling
+                              child: Row(
+                                children: selectedSeats
+                                    .map(
+                                      (seat) => Container(
+                                        padding: const EdgeInsets.all(6.0),
+                                        margin: const EdgeInsets.symmetric(horizontal: 2.0),
+                                        decoration: BoxDecoration(
+                                          color: Colors.blue[100],
+                                          borderRadius: BorderRadius.circular(6.0),
+                                          border: Border.all(color: Colors.blue),
+                                        ),
+                                        child: Text(
+                                          '$seat',
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold, color: Colors.black),
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
+                            ),
+                          ),
+
+                    const SizedBox(height: 4),
+
+                    // Update total price with moderate font size
                     Text(
-                      'No seats selected',
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      'LKR 0.00',
-                      style: TextStyle(
+                      'LKR ${selectedSeats.length * seatPrice}.00',
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.red,
+                        fontSize: 16, // Adjusted font size to be large but not overwhelming
                       ),
                     ),
                   ],
                 ),
+
                 ElevatedButton(
-                  onPressed: () {
-                    // Handle next button click
-                  },
+                  onPressed: selectedSeats.isNotEmpty
+                      ? () {
+                          // Handle next button click
+                        }
+                      : null, // Disable if no seats selected
                   child: const Text('NEXT →'),
                 ),
               ],
@@ -179,43 +202,68 @@ class SeatView extends StatelessWidget {
     );
   }
 
+  /// Function to build seat widgets
   Widget _buildSeat(int seatNumber) {
-    // Define the set of seat numbers to be colored red
-    Set<int> redSeats = {4, 7, 27, 43, 23, 34};
+    bool isBooked = bookedSeats.contains(seatNumber);
+    bool isSelected = selectedSeats.contains(seatNumber);
 
-    // Check if the current seat number is in the set of red seats
-    bool isRedSeat = redSeats.contains(seatNumber);
-
-    // Colors for the seat and border
-    Color borderColor = isRedSeat ? Colors.red : Colors.green;
-    Color seatBackgroundColor = isRedSeat ? Colors.red[100]! : Colors.green[100]!;
-
-    return Container(
-      width: 60,
-      height: 70,
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8.0),
-        border: Border.all(color: borderColor), // Border color for the seat
-        color: seatBackgroundColor, // Seat background color
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.event_seat,
-            size: 24,
-            color: Colors.black, // Icon color for all seats
-          ),
-          Text(
-            '$seatNumber',
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-              color: Colors.black, // Text color for all seats
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          if (isBooked) {
+            // Show booked seat warning
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('This seat is already booked'),
+                duration: Duration(seconds: 2),
+              ),
+            );
+          } else if (selectedSeats.contains(seatNumber)) {
+            // Toggle seat selection (remove seat if selected again)
+            selectedSeats.remove(seatNumber);
+          } else if (selectedSeats.length >= maxSeats) {
+            // Show warning when trying to select more than max seats
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Maximum 10 seats can be selected'),
+                duration: Duration(seconds: 2),
+              ),
+            );
+          } else {
+            // Add seat to selection
+            selectedSeats.add(seatNumber);
+          }
+        });
+      },
+      child: Container(
+        width: 50,
+        height: 60,
+        margin: const EdgeInsets.only(bottom: 12),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8.0),
+          border: Border.all(color: isBooked ? Colors.red : Colors.green),
+          color: isBooked
+              ? Colors.red[100] // Booked seat (Red)
+              : (isSelected ? Colors.blue[200] : Colors.green[100]), // Selected seats turn blue
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.event_seat,
+              size: 20,
+              color: Colors.black,
             ),
-          ),
-        ],
+            Text(
+              '$seatNumber',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+                color: Colors.black,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
