@@ -1,3 +1,4 @@
+import 'package:bus_book/screens/pages/checkout.dart';
 import 'package:flutter/material.dart';
 
 class SeatView extends StatefulWidget {
@@ -43,11 +44,13 @@ class _SeatViewState extends State<SeatView> {
                   children: [
                     Text(
                       'SAMARASINGHE TRAVELS',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                     Text(
                       '08:00 AM',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                   ],
                 ),
@@ -83,7 +86,8 @@ class _SeatViewState extends State<SeatView> {
               child: const Center(
                 child: Text(
                   'Front',
-                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.black),
                 ),
               ),
             ),
@@ -104,11 +108,9 @@ class _SeatViewState extends State<SeatView> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              for (int j = 0; j < 2; j++)
-                                _buildSeat(i + j + 1),
+                              for (int j = 0; j < 2; j++) _buildSeat(i + j + 1),
                               const SizedBox(width: 20),
-                              for (int j = 2; j < 4; j++)
-                                _buildSeat(i + j + 1),
+                              for (int j = 2; j < 4; j++) _buildSeat(i + j + 1),
                             ],
                           ),
                           const SizedBox(height: 16),
@@ -119,8 +121,7 @@ class _SeatViewState extends State<SeatView> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        for (int i = 44; i < 49; i++)
-                          _buildSeat(i + 1),
+                        for (int i = 44; i < 49; i++) _buildSeat(i + 1),
                       ],
                     ),
                   ],
@@ -132,7 +133,8 @@ class _SeatViewState extends State<SeatView> {
           // Section 4: Bottom Bar (Seat info + price remains)
           Container(
             color: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -147,27 +149,39 @@ class _SeatViewState extends State<SeatView> {
                           )
                         : SizedBox(
                             height: 35, // Keeps height fixed
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal, // Enables horizontal scrolling
-                              child: Row(
-                                children: selectedSeats
-                                    .map(
-                                      (seat) => Container(
-                                        padding: const EdgeInsets.all(6.0),
-                                        margin: const EdgeInsets.symmetric(horizontal: 2.0),
-                                        decoration: BoxDecoration(
-                                          color: Colors.blue[100],
-                                          borderRadius: BorderRadius.circular(6.0),
-                                          border: Border.all(color: Colors.blue),
+                            child: Container(
+                              width: 250, // Limit the container width to 234px
+                              height: 38, // Fixed height of 200px
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis
+                                    .horizontal, // Enables horizontal scrolling
+                                child: Row(
+                                  children: selectedSeats
+                                      .map(
+                                        (seat) => Container(
+                                          width: 30, // Fixed width for each box
+                                          height: 35, // Fixed height for each box
+                                          margin: const EdgeInsets.symmetric(
+                                              horizontal: 2.0),
+                                          decoration: BoxDecoration(
+                                            color: Colors.blue[100],
+                                            borderRadius:
+                                                BorderRadius.circular(6.0),
+                                            border:
+                                                Border.all(color: Colors.blue),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              '$seat',
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black),
+                                            ),
+                                          ),
                                         ),
-                                        child: Text(
-                                          '$seat',
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold, color: Colors.black),
-                                        ),
-                                      ),
-                                    )
-                                    .toList(),
+                                      )
+                                      .toList(),
+                                ),
                               ),
                             ),
                           ),
@@ -180,19 +194,61 @@ class _SeatViewState extends State<SeatView> {
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.red,
-                        fontSize: 16, // Adjusted font size to be large but not overwhelming
+                        fontSize:
+                            16, // Adjusted font size to be large but not overwhelming
                       ),
                     ),
                   ],
                 ),
-
-                ElevatedButton(
-                  onPressed: selectedSeats.isNotEmpty
+                GestureDetector(
+                  onTap: selectedSeats.isNotEmpty
                       ? () {
-                          // Handle next button click
+                          // Navigate to CheckOutPage when button is tapped
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CheckOut(
+                                  // Your CheckOutPage
+                                  //selectedSeats: selectedSeats.toList(), // Passing selected seats
+                                  //totalAmount: selectedSeats.length * seatPrice, // Passing total amount
+                                  ),
+                            ),
+                          );
                         }
                       : null, // Disable if no seats selected
-                  child: const Text('NEXT →'),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 11), // Button padding
+                    decoration: BoxDecoration(
+                      gradient: selectedSeats.isNotEmpty
+                          ? LinearGradient(
+                              colors: [
+                                Color(0xFF880000), // Medium red
+                                Color(0xFF9E0000), // Lighter red
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            )
+                          : LinearGradient(
+                              colors: [
+                                Color(0xFFB0B0B0), // Light grey
+                                Color(0xFFD0D0D0), // Lighter grey
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                      borderRadius:
+                          BorderRadius.circular(15.0), // Rounded corners
+                    ),
+                    child: const Text(
+                      'CHECKOUT',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white, // White text color
+                        fontSize: 16, // Adjust font size as needed
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -236,29 +292,31 @@ class _SeatViewState extends State<SeatView> {
         });
       },
       child: Container(
-        width: 50,
-        height: 60,
+        width: 60, // Fixed width for all seats
+        height: 70, // Fixed height for all seats
         margin: const EdgeInsets.only(bottom: 12),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.0),
           border: Border.all(color: isBooked ? Colors.red : Colors.green),
           color: isBooked
               ? Colors.red[100] // Booked seat (Red)
-              : (isSelected ? Colors.blue[200] : Colors.green[100]), // Selected seats turn blue
+              : (isSelected
+                  ? Colors.blue[200]
+                  : Colors.green[100]), // Selected seats turn blue
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(
               Icons.event_seat,
-              size: 20,
+              size: 24,
               color: Colors.black,
             ),
             Text(
               '$seatNumber',
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 12,
+                fontSize: 14,
                 color: Colors.black,
               ),
             ),

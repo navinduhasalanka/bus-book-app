@@ -138,7 +138,7 @@ class TicketView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Rs. 1600 /per seat",
+                      "Rs. 500 /per seat",
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
