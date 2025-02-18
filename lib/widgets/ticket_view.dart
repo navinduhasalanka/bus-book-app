@@ -35,7 +35,7 @@ class TicketView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Sworgadwari Deluxe",
+                  "Samarasinghe",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -76,7 +76,7 @@ class TicketView extends StatelessWidget {
                 const Row(
                   children: [
                     Text(
-                      "Kathmandu",
+                      "Matara",
                       style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
@@ -84,7 +84,7 @@ class TicketView extends StatelessWidget {
                     ),
                     Spacer(),
                     Text(
-                      "Pyuthan",
+                      "Kaduwela",
                       style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,

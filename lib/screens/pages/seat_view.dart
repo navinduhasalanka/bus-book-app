@@ -34,14 +34,14 @@ class SeatView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: const [
                     Text(
-                      'SRI MURUGAN TRAVELS (N1)',
+                      'SAMARASINGHE TRAVELS ',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
                     ),
                     Text(
-                      '08:00 PM',
+                      '08:00 AM',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -54,7 +54,7 @@ class SeatView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: const [
                     Text(
-                      'Colombo - Jaffna',
+                      'Matara - Kaduwela',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
