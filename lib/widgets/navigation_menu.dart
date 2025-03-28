@@ -1,7 +1,7 @@
 import 'package:bus_book/screens/pages/booking_screen.dart';
 import 'package:bus_book/screens/pages/home_screen.dart';
 import 'package:bus_book/screens/pages/profile_screen.dart';
-import 'package:bus_book/screens/pages/setting_screen.dart';
+import 'package:bus_book/screens/pages/info_screen.dart';
 import 'package:bus_book/widgets/welcome_scaffold.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +19,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
   final List<Widget> _pages = const [
     HomeScreen(),
     BookingScreen(),
-    SettingScreen(),
+    InfoScreen(),
     ProfileScreen(),
   ];
 

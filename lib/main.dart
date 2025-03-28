@@ -3,6 +3,7 @@ import 'package:bus_book/screens/pages/checkout.dart';
 import 'package:bus_book/screens/pages/home_screen.dart';
 import 'package:bus_book/screens/pages/seat_view.dart';
 import 'package:bus_book/screens/welcome/welcome_screen.dart';
+import 'package:bus_book/widgets/booked_ticket.dart';
 import 'package:bus_book/widgets/navigation_menu.dart';
 import 'package:bus_book/widgets/ticket_view.dart';
 import 'package:bus_book/widgets/ticketstatus.dart';
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false, // remove debug banner
       title: 'Flutter Demo',
       theme: ThemeData(),
-      home: const WelcomeScreen()
+      home: const BookedTicket()
     );
   }
 }
