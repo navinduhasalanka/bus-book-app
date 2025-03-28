@@ -55,14 +55,14 @@ class _NavigationMenuState extends State<NavigationMenu> {
                     onPressed: () => _onItemTapped(1),
                   ),
                   _NavigationMenuIcon(
-                    icon: Icons.settings,
-                    label: 'Settings',
-                    onPressed: () => _onItemTapped(2),
-                  ),
-                  _NavigationMenuIcon(
                     icon: Icons.account_circle, // Profile icon
                     label: 'Profile',
                     onPressed: () => _onItemTapped(3),
+                  ),
+                  _NavigationMenuIcon(
+                    icon: Icons.insert_drive_file,
+                    label: 'Info',
+                    onPressed: () => _onItemTapped(2),
                   ),
                 ],
               ),

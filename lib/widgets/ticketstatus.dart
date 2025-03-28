@@ -7,7 +7,7 @@ class TicketStatus extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        margin: const EdgeInsets.all(16),
+        
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -65,7 +65,7 @@ class TicketStatus extends StatelessWidget {
                       Text(
                         'Matara',
                         style: TextStyle(
-                          color: Colors.grey[700], // Grey for 'From'
+                          color: Colors.black, // Grey for 'From'
                           fontSize: 16,
                         ),
                       ),
@@ -95,7 +95,7 @@ class TicketStatus extends StatelessWidget {
                       Text(
                         'Kaduwela',
                         style: TextStyle(
-                          color: Colors.grey[700], // Grey for 'To'
+                          color: Colors.black, // Grey for 'To'
                           fontSize: 16,
                         ),
                       ),
