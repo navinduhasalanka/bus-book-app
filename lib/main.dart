@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false, // remove debug banner
       title: 'Flutter Demo',
       theme: ThemeData(),
-      home: const BookedTicket()
+      home: const NavigationMenu()
     );
   }
 }
