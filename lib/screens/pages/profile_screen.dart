@@ -97,7 +97,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 5),
             TextFormField(
+<<<<<<< HEAD
               initialValue: "test@19", // Default password
+=======
+              initialValue: "test#19", // Default password
+>>>>>>> 2653f52bc614329a3ecb055379d583191bb752fd
               obscureText: !_isPasswordVisible, // Toggle visibility
               decoration: InputDecoration(
                 filled: true,
