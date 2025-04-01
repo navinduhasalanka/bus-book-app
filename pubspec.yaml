@@ -41,6 +41,7 @@ dependencies:
   firebase_auth: ^5.3.4
   dotted_line: ^3.2.3
   image_picker: ^1.0.4
+  permission_handler: ^11.0.1
 
 dev_dependencies:
   flutter_test:
