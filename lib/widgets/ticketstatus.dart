@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 
 class TicketStatus extends StatelessWidget {
-  const TicketStatus({super.key});
+  final List<int> selectedSeats;
+  final int totalPrice;
+  
+  const TicketStatus({
+    super.key, 
+    required this.selectedSeats,
+    required this.totalPrice,
+  });
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -156,16 +162,20 @@ class TicketStatus extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      _buildSeatChip('A2'),
-                      const SizedBox(width: 8),
-                      _buildSeatChip('A3'),
-                      const SizedBox(width: 8),
-                      _buildSeatChip('A4'),
-                      const SizedBox(width: 8),
-                      _buildSeatChip('B6'),
-                    ],
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: selectedSeats.isEmpty
+                      ? [
+                          const Text(
+                            'No seats selected',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14,
+                            ),
+                          )
+                        ]
+                      : selectedSeats.map((seatNumber) => _buildSeatChip(seatNumber.toString())).toList(),
                   ),
                 ],
               ),
@@ -217,9 +227,9 @@ class TicketStatus extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const Text(
-                        'LKR 6400.00',
-                        style: TextStyle(
+                      Text(
+                        'LKR ${totalPrice.toStringAsFixed(2)}',
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: Colors.black, // Middle black for price

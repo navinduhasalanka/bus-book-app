@@ -208,10 +208,9 @@ class _SeatViewState extends State<SeatView> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => CheckOut(
-                                  // Your CheckOutPage
-                                  //selectedSeats: selectedSeats.toList(), // Passing selected seats
-                                  //totalAmount: selectedSeats.length * seatPrice, // Passing total amount
-                                  ),
+                                selectedSeats: selectedSeats.toList(), // Passing selected seats
+                                totalAmount: selectedSeats.length * seatPrice, // Passing total amount
+                              ),
                             ),
                           );
                         }

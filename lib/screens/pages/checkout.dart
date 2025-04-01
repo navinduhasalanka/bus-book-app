@@ -3,7 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Import the required package
 
 class CheckOut extends StatefulWidget {
-  const CheckOut({super.key});
+  final List<int> selectedSeats;
+  final int totalAmount;
+  
+  const CheckOut({
+    super.key,
+    required this.selectedSeats,
+    required this.totalAmount,
+  });
 
   @override
   State<CheckOut> createState() => _CheckOutState();
@@ -175,7 +182,13 @@ class _CheckOutState extends State<CheckOut> {
                   },
                 ),
                 const SizedBox(height: 16),
-                TicketStatus(),
+                
+                // TicketStatus with required parameters
+                TicketStatus(
+                  selectedSeats: widget.selectedSeats,
+                  totalPrice: widget.totalAmount,
+                ),
+                
                 const SizedBox(height: 16),
 
                 // Proceed to Pay Button
