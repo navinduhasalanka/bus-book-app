@@ -32,13 +32,6 @@ class _BookingScreenState extends State<BookingScreen> {
           child: Column(
             children: const [
               BookedTicket(),
-              BookedTicket(),
-              BookedTicket(),
-              BookedTicket(),
-              BookedTicket(),
-              BookedTicket(),
-              BookedTicket(),
-              BookedTicket(),
             ],
           ),
         ),
