@@ -7,8 +7,9 @@ class BookedTicketView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Booked Ticket',
-        style: TextStyle(
+        title: const Text(
+          'Booked Ticket',
+          style: TextStyle(
             color: Colors.red,
             fontWeight: FontWeight.bold,
           ),
@@ -27,7 +28,7 @@ class BookedTicketView extends StatelessWidget {
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Colors.grey.shade400, // Grey border
+                color: Colors.grey.shade400,
                 width: 2.0,
               ),
               boxShadow: [
@@ -41,28 +42,39 @@ class BookedTicketView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(
-                  child: const Text(
-                    'Your Ticket Report Status',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.black, // Dark black title
+                // 🔴 Full Red Background for "Bus Ticket" Section
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.red, // Red background for full section
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      'Bus Ticket',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white, // White text for contrast
+                      ),
                     ),
                   ),
                 ),
                 const SizedBox(height: 12),
                 const Divider(color: Colors.grey, thickness: 1),
                 const SizedBox(height: 24),
+
                 const Text(
                   'Your Destination',
                   style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black, // Middle black for section title
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
                   ),
                 ),
                 const SizedBox(height: 12),
+
                 Row(
                   children: [
                     Expanded(
@@ -72,24 +84,26 @@ class BookedTicketView extends StatelessWidget {
                           Text(
                             'From',
                             style: TextStyle(
-                              color: Colors.grey[600], // Grey for 'From'
+                              color: Colors.grey[600],
                               fontSize: 14,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text(
+                          const Text(
                             'Matara',
                             style: TextStyle(
-                              color: Colors.black, // Grey for 'From'
+                              color: Colors.black,
                               fontSize: 16,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             '06:15 pm',
                             style: TextStyle(
-                              color: Colors.grey[600], // Light black for city names
+                              color: Colors.grey[600],
                               fontSize: 14,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ],
@@ -102,24 +116,26 @@ class BookedTicketView extends StatelessWidget {
                           Text(
                             'To',
                             style: TextStyle(
-                              color: Colors.grey[600], // Light black for city names
+                              color: Colors.grey[600],
                               fontSize: 14,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text(
+                          const Text(
                             'Kaduwela',
                             style: TextStyle(
-                              color: Colors.black, // Grey for 'To'
+                              color: Colors.black,
                               fontSize: 16,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             '08:45 am',
                             style: TextStyle(
-                              color: Colors.grey[600], // Light black for city names
+                              color: Colors.grey[600],
                               fontSize: 14,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ],
@@ -128,32 +144,43 @@ class BookedTicketView extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 12),
-                Row(
+                const Row(
                   children: [
-                    const Text(
+                    Text(
                       'Bus No.   : ',
                       style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black, // Middle black
+                        fontSize: 18,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const Text(
+                    Text(
                       'NB 4543',
                       style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black, // Middle black
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
                     ),
                   ],
                 ),
+                const SizedBox(height: 2),
+                const Text(
+                  'Samarasinghe Travels',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.redAccent,
+                  ),
+                ),
                 const SizedBox(height: 24),
+
                 // Border around "Your Seats"
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: Colors.grey.shade400, // Grey border
+                      color: Colors.grey.shade400,
                       width: 2.0,
                     ),
                     borderRadius: BorderRadius.circular(8),
@@ -166,7 +193,7 @@ class BookedTicketView extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: Colors.black87, // Middle black
+                          color: Colors.black87,
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -185,12 +212,13 @@ class BookedTicketView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
+
                 // Border around "Total Fare Price"
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: Colors.grey.shade400, // Grey border
+                      color: Colors.grey.shade400,
                       width: 2.0,
                     ),
                     borderRadius: BorderRadius.circular(8),
@@ -203,7 +231,7 @@ class BookedTicketView extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
-                          color: Colors.black87, // Middle black
+                          color: Colors.black87,
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -216,7 +244,7 @@ class BookedTicketView extends StatelessWidget {
                                 TextSpan(
                                   text: 'Total Price:\n',
                                   style: TextStyle(
-                                    color: Colors.black87, // Lighter grey for label
+                                    color: Colors.black87,
                                     fontSize: 15,
                                   ),
                                 ),
@@ -224,7 +252,7 @@ class BookedTicketView extends StatelessWidget {
                                   text: '(Including all taxes)',
                                   style: TextStyle(
                                     color: Colors.black87,
-                                    fontWeight: FontWeight.w300, // Keep the same lighter grey
+                                    fontWeight: FontWeight.w300,
                                     fontSize: 13,
                                   ),
                                 ),
@@ -236,7 +264,7 @@ class BookedTicketView extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black, // Middle black for price
+                              color: Colors.black,
                             ),
                           ),
                         ],
