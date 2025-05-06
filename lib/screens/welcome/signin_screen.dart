@@ -3,7 +3,8 @@ import 'package:bus_book/widgets/navigation_menu.dart';
 import 'package:bus_book/widgets/welcome_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
-import '../../services/firbase_auth_services.dart'; // Import FirebaseAuthServices
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -14,9 +15,84 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   final _formSignInKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool rememberPassword = true;
+  String responseMessage = '';
+  bool isLoading = false;
+
+  Future<void> signIn() async {
+    if (_formSignInKey.currentState!.validate() && rememberPassword) {
+      setState(() {
+        isLoading = true;
+        responseMessage = '';
+      });
+
+      final url = Uri.parse('http://localhost:8000/api/auth/login');
+      
+      final body = {
+        'userName': _userNameController.text.trim(),
+        'password': _passwordController.text.trim(),
+      };
+
+      try {
+        final response = await http.post(
+          url,
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode(body),
+        );
+
+        setState(() {
+          isLoading = false;
+          responseMessage = 'Status Code: ${response.statusCode}\nResponse: ${response.body}';
+        });
+
+        if (response.statusCode == 200) {
+          // Parse the response to check for success
+          final jsonResponse = jsonDecode(response.body);
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Sign in successful!'),
+            ),
+          );
+          
+          // Navigate to the NavigationMenu screen
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const NavigationMenu(),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Sign in failed: ${response.body}'),
+            ),
+          );
+        }
+      } catch (e) {
+        setState(() {
+          isLoading = false;
+          responseMessage = 'Error: $e';
+        });
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Sign in failed: $e'),
+          ),
+        );
+      }
+    } else if (!rememberPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Please check "Remember me"',
+          ),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,16 +134,16 @@ class _SignInScreenState extends State<SignInScreen> {
                         height: 30,
                       ),
                       TextFormField(
-                        controller: _emailController,
+                        controller: _userNameController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter Email';
+                            return 'Please enter Username';
                           }
                           return null;
                         },
                         decoration: InputDecoration(
-                          label: const Text('Email'),
-                          hintText: 'Enter Email',
+                          label: const Text('Username'),
+                          hintText: 'Enter Username',
                           hintStyle: const TextStyle(
                             color: Colors.black26,
                           ),
@@ -147,55 +223,44 @@ class _SignInScreenState extends State<SignInScreen> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () async {
-                            if (_formSignInKey.currentState!.validate() &&
-                                rememberPassword) {
-                              try {
-                                final user = await FirebaseAuthServices().logIn(
-                                  email: _emailController.text.trim(),
-                                  password: _passwordController.text.trim(),
-                                );
-                                if (user != null) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Sign in successful!'),
-                                    ),
-                                  );
-                                  // Navigate to the NavigationMenu screen
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const NavigationMenu(),
-                                    ),
-                                  );
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content:
-                                          Text('Invalid email or password'),
-                                    ),
-                                  );
-                                }
-                              } catch (e) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('Sign in failed: $e'),
-                                  ),
-                                );
-                              }
-                            } else if (!rememberPassword) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Please agree to processing of personal details',
-                                  ),
+                          onPressed: isLoading ? null : signIn,
+                          child: isLoading 
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
                                 ),
-                              );
-                            }
-                          },
-                          child: const Text('Sign in'),
+                              )
+                            : const Text('Sign in'),
                         ),
                       ),
+                      if (responseMessage.isNotEmpty)
+                        Container(
+                          margin: const EdgeInsets.only(top: 15),
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'API Response:',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                responseMessage,
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                            ],
+                          ),
+                        ),
                       const SizedBox(
                         height: 15,
                       ),
@@ -221,10 +286,11 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                           ),
                           Expanded(
-                              child: Divider(
-                            thickness: 0.7,
-                            color: Colors.grey.withOpacity(0.5),
-                          )),
+                            child: Divider(
+                              thickness: 0.7,
+                              color: Colors.grey.withOpacity(0.5),
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(

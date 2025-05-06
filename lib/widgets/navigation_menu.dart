@@ -3,6 +3,7 @@ import 'package:bus_book/screens/pages/home_screen.dart';
 import 'package:bus_book/screens/pages/profile_screen.dart';
 import 'package:bus_book/screens/pages/info_screen.dart';
 import 'package:bus_book/widgets/welcome_scaffold.dart';
+import 'package:bus_book/widgets/backend_test.dart'; // <-- Import here
 import 'package:flutter/material.dart';
 
 class NavigationMenu extends StatefulWidget {
@@ -13,9 +14,8 @@ class NavigationMenu extends StatefulWidget {
 }
 
 class _NavigationMenuState extends State<NavigationMenu> {
-  int _selectedIndex = 0; // To track the selected page
+  int _selectedIndex = 0;
 
-  // A list of text widgets corresponding to each page
   final List<Widget> _pages = const [
     HomeScreen(),
     BookingScreen(),
@@ -29,11 +29,30 @@ class _NavigationMenuState extends State<NavigationMenu> {
     });
   }
 
+  void _showBackendTest(BuildContext context) {
+    // You can use Navigator.push for a full page, or showModalBottomSheet for a modal
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const BackendTest()),
+    );
+    // Or, for a modal bottom sheet:
+    // showModalBottomSheet(
+    //   context: context,
+    //   isScrollControlled: true,
+    //   builder: (_) => const SizedBox(height: 500, child: BackendTest()),
+    // );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: (Center(child: _pages[_selectedIndex])), // Show selected page
+        body: Center(child: _pages[_selectedIndex]),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => _showBackendTest(context),
+          child: const Icon(Icons.cloud_download),
+          tooltip: 'Test Backend',
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomAppBar(
           shape: const CircularNotchedRectangle(),
           notchMargin: 10,
@@ -55,7 +74,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
                     onPressed: () => _onItemTapped(1),
                   ),
                   _NavigationMenuIcon(
-                    icon: Icons.account_circle, // Profile icon
+                    icon: Icons.account_circle,
                     label: 'Profile',
                     onPressed: () => _onItemTapped(3),
                   ),
