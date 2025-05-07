@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'package:bus_book/widgets/ticket_view.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -9,22 +11,33 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // Variable to hold the selected date
   DateTime? _selectedDate;
-
-  // Variables to hold selected stations
   String? _selectedFromStation;
   String? _selectedToStation;
+  List<String> stations = [];
+  List<Map<String, dynamic>> tickets = [];
+  bool _isLoading = false;
 
-  // Dummy ticket data
-  final List<Map<String, dynamic>> tickets = [
-    {'id': 1},
-    {'id': 2},
-    {'id': 3},
-    {'id': 4},
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _fetchStations();
+  }
 
-  // Function to show date picker and update the selected date
+  Future<void> _fetchStations() async {
+    try {
+      final response = await http.get(Uri.parse('http://localhost:8000/api/buses/stationsList'));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        setState(() {
+          stations = data.cast<String>();
+        });
+      }
+    } catch (e) {
+      print('Error fetching stations: $e');
+    }
+  }
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -39,27 +52,71 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<void> _findBuses() async {
+    if (_selectedFromStation == null || 
+        _selectedToStation == null || 
+        _selectedDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select all fields')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      tickets = [];
+    });
+
+    final String fromCity = _selectedFromStation!;
+    final String toCity = _selectedToStation!;
+    final String departureDate =
+        "${_selectedDate!.year.toString().padLeft(4, '0')}-${_selectedDate!.month.toString().padLeft(2, '0')}-${_selectedDate!.day.toString().padLeft(2, '0')}";
+
+    final String apiUrl =
+        "http://localhost:8000/api/buses?fromCity=$fromCity&toCity=$toCity&DepartureDate=$departureDate";
+
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        setState(() {
+          tickets = data.cast<Map<String, dynamic>>();
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to fetch buses: ${response.statusCode}')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Calculate button position based on screen width
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Stack(
       children: [
         Column(
           children: [
-            // Top gradient area (blue)
             Container(
-              height: 400, // Height of the gradient container
+              height: 400,
               width: double.infinity,
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Color(0xFF540000), // Dark red
-                    Color(0xFF880000), // Medium red
-                    Color(0xFF9E0000), // Lighter red
+                    Color(0xFF540000),
+                    Color(0xFF880000),
+                    Color(0xFF9E0000),
                   ],
                 ),
               ),
@@ -81,7 +138,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       const SizedBox(height: 25),
-                      // Departure Terminal
                       const Text(
                         'Departure Terminal',
                         style: TextStyle(
@@ -95,22 +151,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 45,
                         child: DropdownButtonFormField<String>(
                           value: _selectedFromStation,
-                          items: const [
-                            DropdownMenuItem(
-                                value: 'Station 1', child: Text('Station 1')),
-                            DropdownMenuItem(
-                                value: 'Station 2', child: Text('Station 2')),
-                            DropdownMenuItem(
-                                value: 'Station 3', child: Text('Station 3')),
-                          ],
+                          items: stations
+                              .map((station) => DropdownMenuItem(
+                                    value: station,
+                                    child: Text(station),
+                                  ))
+                              .toList(),
                           onChanged: (value) {
                             setState(() {
                               _selectedFromStation = value;
                             });
                           },
                           decoration: InputDecoration(
-                            contentPadding:
-                                const EdgeInsets.symmetric(vertical: 10),
+                            contentPadding: const EdgeInsets.symmetric(vertical: 10),
                             fillColor: Colors.white,
                             filled: true,
                             hintText: 'From....',
@@ -120,20 +173,17 @@ class _HomeScreenState extends State<HomeScreen> {
                               color: Colors.black54,
                             ),
                             border: OutlineInputBorder(
-                              borderSide:
-                                  const BorderSide(color: Colors.black12),
+                              borderSide: const BorderSide(color: Colors.black12),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  const BorderSide(color: Colors.black12),
+                              borderSide: const BorderSide(color: Colors.black12),
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
                         ),
                       ),
                       const SizedBox(height: 20),
-                      // Arrival Terminal
                       const Text(
                         'Arrival Terminal',
                         style: TextStyle(
@@ -147,22 +197,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 45,
                         child: DropdownButtonFormField<String>(
                           value: _selectedToStation,
-                          items: const [
-                            DropdownMenuItem(
-                                value: 'Station 1', child: Text('Station 1')),
-                            DropdownMenuItem(
-                                value: 'Station 2', child: Text('Station 2')),
-                            DropdownMenuItem(
-                                value: 'Station 3', child: Text('Station 3')),
-                          ],
+                          items: stations
+                              .map((station) => DropdownMenuItem(
+                                    value: station,
+                                    child: Text(station),
+                                  ))
+                              .toList(),
                           onChanged: (value) {
                             setState(() {
                               _selectedToStation = value;
                             });
                           },
                           decoration: InputDecoration(
-                            contentPadding:
-                                const EdgeInsets.symmetric(vertical: 10),
+                            contentPadding: const EdgeInsets.symmetric(vertical: 10),
                             fillColor: Colors.white,
                             filled: true,
                             hintText: 'To....',
@@ -172,20 +219,17 @@ class _HomeScreenState extends State<HomeScreen> {
                               color: Colors.black54,
                             ),
                             border: OutlineInputBorder(
-                              borderSide:
-                                  const BorderSide(color: Colors.black12),
+                              borderSide: const BorderSide(color: Colors.black12),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  const BorderSide(color: Colors.black12),
+                              borderSide: const BorderSide(color: Colors.black12),
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
                         ),
                       ),
                       const SizedBox(height: 20),
-                      // Travel Date
                       const Text(
                         'Travel Date',
                         style: TextStyle(
@@ -243,60 +287,80 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            // Solid darker color area (gray)
             Expanded(
               child: Container(
                 width: double.infinity,
-                color: const Color(0xFFd1d0d6), // Darker grey solid color
-                child: tickets.isEmpty
-                    ? const Center(
-                        child: Text('No tickets available'),
-                      )
-                    : ListView.separated(
-                        padding: const EdgeInsets.only(
-                            top: 16, bottom: 0, left: 0, right: 0),
-                        itemCount: tickets.length,
-                        itemBuilder: (context, index) {
-                          return TicketView();
-                        },
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: 0),
-                      ),
+                color: const Color(0xFFd1d0d6),
+                child: _isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : tickets.isEmpty
+                        ? const Center(
+                            child: Text('No tickets available'),
+                          )
+                        : ListView.separated(
+                            padding: const EdgeInsets.only(
+                                top: 16, bottom: 0, left: 0, right: 0),
+                            itemCount: tickets.length,
+                            itemBuilder: (context, index) {
+                              final bus = tickets[index];
+                              final String fromCity = _selectedFromStation!;
+                              final String toCity = _selectedToStation!;
+                              List<Map<String, dynamic>> allCities =
+                                  List<Map<String, dynamic>>.from(
+                                      bus['busCitiesAndTimes'] ?? []);
+
+                              Map<String, dynamic>? departureCity;
+                              Map<String, dynamic>? arrivalCity;
+
+                              for (var city in allCities) {
+                                if (city['cityName'] == fromCity && departureCity == null) {
+                                  departureCity = city;
+                                }
+                                if (city['cityName'] == toCity) {
+                                  arrivalCity = city;
+                                }
+                              }
+
+                              List<Map<String, dynamic>> filteredCities = [];
+                              if (departureCity != null && arrivalCity != null) {
+                                filteredCities.add(departureCity);
+                                filteredCities.add(arrivalCity);
+                              }
+
+                              return TicketView(
+                                busName: bus['busName'] ?? '',
+                                busPlateNo: bus['busPlateNo'] ?? '',
+                                busType: bus['busType'] ?? '',
+                                busOwnership: bus['busOwnership'] ?? '',
+                                busAmenities: List<String>.from(bus['busAmenities'] ?? []),
+                                recommends: bus['recommends'] ?? 0,
+                                busCitiesAndTimes: filteredCities,
+                                busTicketPrice: bus['busTicketPrice'] ?? 0,
+                                busDepartureDate: bus['busDepartureDate'] ?? '',
+                                seats: List<Map<String, dynamic>>.from(bus['seats'] ?? []),
+                              );
+                            },
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(height: 0),
+                          ),
               ),
             ),
           ],
         ),
-        // Positioned button at the edge of blue and gray areas
         Positioned(
-          left: (screenWidth / 2) -
-              75, // Center horizontally (button width is 150)
-          top: 400 -
-              25, // Position so that half of the button overlaps blue and gray (button height is 50)
+          left: (screenWidth / 2) - 75,
+          top: 400 - 25,
           child: SizedBox(
             width: 150,
             height: 50,
             child: ElevatedButton(
-              onPressed: () {
-                // Handle button press
-                if (_selectedFromStation == null ||
-                    _selectedToStation == null ||
-                    _selectedDate == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Please select all fields')),
-                  );
-                } else {
-                  // Proceed to find buses
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Finding buses...')),
-                  );
-                }
-              },
+              onPressed: _findBuses,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF880000), // Blue color
+                backgroundColor: const Color(0xFF880000),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                   side: const BorderSide(
-                      color: Colors.white, width: 2), // White border
+                      color: Colors.white, width: 2),
                 ),
               ),
               child: const Text(

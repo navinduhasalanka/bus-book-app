@@ -2,22 +2,63 @@ import 'package:bus_book/screens/pages/seat_view.dart';
 import 'package:flutter/material.dart';
 
 class TicketView extends StatelessWidget {
-  const TicketView({Key? key}) : super(key: key);
+  final String busName;
+  final String busPlateNo;
+  final String busType;
+  final String busOwnership;
+  final List<String> busAmenities;
+  final int recommends;
+  final List<Map<String, dynamic>> busCitiesAndTimes;
+  final num busTicketPrice;
+  final String busDepartureDate;
+  final List<Map<String, dynamic>> seats;
+
+  const TicketView({
+    Key? key,
+    required this.busName,
+    required this.busPlateNo,
+    required this.busType,
+    required this.busOwnership,
+    required this.busAmenities,
+    required this.recommends,
+    required this.busCitiesAndTimes,
+    required this.busTicketPrice,
+    required this.busDepartureDate,
+    required this.seats,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Get first and last city/time if available
+    final fromCity = busCitiesAndTimes.isNotEmpty
+        ? busCitiesAndTimes.first['cityName'] ?? ''
+        : '';
+    final toCity = busCitiesAndTimes.length > 1
+        ? busCitiesAndTimes.last['cityName'] ?? ''
+        : '';
+    final fromTime = busCitiesAndTimes.isNotEmpty
+        ? busCitiesAndTimes.first['arrivalTime'] ?? ''
+        : '';
+    final toTime = busCitiesAndTimes.length > 1
+        ? busCitiesAndTimes.last['arrivalTime'] ?? ''
+        : '';
+
+    // Count available seats
+    final availableSeats = seats
+        .where((seat) => seat['availability'] == 'available')
+        .length;
+    final totalSeats = seats.length;
+
     return SingleChildScrollView(
-      // Wrap with SingleChildScrollView
       child: Container(
-        // Increased the width for a wider ticket
         margin: const EdgeInsets.all(16),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: const Color(0xFF9E0000), // Border color
-            width: 2.0, // Border width
+            color: const Color(0xFF9E0000),
+            width: 2.0,
           ),
           boxShadow: [
             BoxShadow(
@@ -31,15 +72,22 @@ class TicketView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Samarasinghe",
-                  style: TextStyle(
+                  busName,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF9E0000),
+                  ),
+                ),
+                Text(
+                  busPlateNo,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Colors.black54,
                   ),
                 ),
               ],
@@ -51,8 +99,8 @@ class TicketView extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      "06:15 PM",
-                      style: TextStyle(
+                      fromTime,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -60,32 +108,32 @@ class TicketView extends StatelessWidget {
                     const Spacer(),
                     Transform.translate(
                       offset: const Offset(0, 12),
-                      child: Icon(Icons.directions_bus,
+                      child: const Icon(Icons.directions_bus,
                           color: Color(0xFF9E0000), size: 30),
                     ),
                     const Spacer(),
                     Text(
-                      "08:45 AM",
-                      style: TextStyle(
+                      toTime,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
                 ),
-                const Row(
+                Row(
                   children: [
                     Text(
-                      "Matara",
-                      style: TextStyle(
+                      fromCity,
+                      style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                           color: Colors.black),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Text(
-                      "Kaduwela",
-                      style: TextStyle(
+                      toCity,
+                      style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                           color: Colors.black),
@@ -93,38 +141,59 @@ class TicketView extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 8),
-                const Row(
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 4,
                   children: [
-                    Icon(Icons.ac_unit, color: Colors.grey, size: 18),
-                    SizedBox(width: 4),
-                    Text(
-                      "AC",
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                    if (busAmenities.contains('AC'))
+                      const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.ac_unit, color: Colors.grey, size: 18),
+                          SizedBox(width: 4),
+                          Text(
+                            "AC",
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.star, color: Colors.amber, size: 18),
+                        const SizedBox(width: 4),
+                        Text(
+                          recommends.toStringAsFixed(1),
+                          style: const TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w500),
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 8),
-                    Icon(Icons.star, color: Colors.amber, size: 18),
-                    SizedBox(width: 4),
-                    Text(
-                      "4.5",
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                    ),
-                    SizedBox(width: 8),
-                    Icon(Icons.wifi, color: Colors.grey, size: 18),
-                    SizedBox(width: 4),
-                    Text(
-                      "Internet",
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                    ),
-                    SizedBox(width: 8),
-                    Icon(Icons.chair, color: Colors.grey, size: 18),
-                    SizedBox(width: 4),
-                    Text(
-                      "49 seats",
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                    if (busAmenities.contains('Internet/Wifi'))
+                      const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.wifi, color: Colors.grey, size: 18),
+                          SizedBox(width: 4),
+                          Text(
+                            "Internet",
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.chair, color: Colors.grey, size: 18),
+                        const SizedBox(width: 4),
+                        Text(
+                          "$totalSeats seats",
+                          style: const TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w500),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -138,16 +207,16 @@ class TicketView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Rs. 500 /per seat",
-                      style: TextStyle(
+                      "Rs. $busTicketPrice /per seat",
+                      style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
                     ),
                     Text(
-                      "5 seats available",
-                      style: TextStyle(
+                      "$availableSeats seats available",
+                      style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                         color: Colors.green,
@@ -157,14 +226,13 @@ class TicketView extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    // Navigate to SeatView when the button is pressed
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => const SeatView()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF9E0000),
+                    backgroundColor: const Color(0xFF9E0000),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
