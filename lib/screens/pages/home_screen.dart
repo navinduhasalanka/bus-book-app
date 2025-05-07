@@ -295,7 +295,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ? const Center(child: CircularProgressIndicator())
                     : tickets.isEmpty
                         ? const Center(
-                            child: Text('No tickets available'),
+                            child: Text('No buses available'),
                           )
                         : ListView.separated(
                             padding: const EdgeInsets.only(

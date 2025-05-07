@@ -12,6 +12,9 @@ class TicketView extends StatelessWidget {
   final num busTicketPrice;
   final String busDepartureDate;
   final List<Map<String, dynamic>> seats;
+  
+  // Total seats constant
+  static const int totalSeats = 37;
 
   const TicketView({
     Key? key,
@@ -43,11 +46,10 @@ class TicketView extends StatelessWidget {
         ? busCitiesAndTimes.last['arrivalTime'] ?? ''
         : '';
 
-    // Count available seats
+    // Count available seats - keep this dynamic
     final availableSeats = seats
         .where((seat) => seat['availability'] == 'available')
         .length;
-    final totalSeats = seats.length;
 
     return SingleChildScrollView(
       child: Container(
