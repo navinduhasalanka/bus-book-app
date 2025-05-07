@@ -226,11 +226,23 @@ class TicketView extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const SeatView()),
-                    );
-                  },
+                        Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SeatView(
+                            seats: seats,
+                            busName: busName,
+                            fromCity: busCitiesAndTimes.first['cityName'],
+                            toCity: busCitiesAndTimes.last['cityName'],
+                            departureTime: busCitiesAndTimes.first['arrivalTime'],
+                            departureDate: busDepartureDate,
+                            ticketPrice: busTicketPrice.toInt(), // Convert to int
+                            busCitiesAndTimes : busCitiesAndTimes,
+                            arrivalTime : busCitiesAndTimes.last['arrivalTime'],
+                            ),
+                        ),
+                        );
+                    },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF9E0000),
                     shape: RoundedRectangleBorder(

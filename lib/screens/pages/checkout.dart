@@ -1,15 +1,25 @@
-import 'package:bus_book/widgets/ticketstatus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // Import the required package
+import 'package:flutter/services.dart';
+import 'package:bus_book/widgets/ticketstatus.dart';
 
 class CheckOut extends StatefulWidget {
-  final List<int> selectedSeats;
+  final List<String> selectedSeats;
   final int totalAmount;
-  
+  final String fromCity;  // Add these parameters
+  final String toCity;
+  final String departureTime;
+  final String arrivalTime;
+  final String busName;
+
   const CheckOut({
     super.key,
     required this.selectedSeats,
     required this.totalAmount,
+    required this.fromCity,  // Add to constructor
+    required this.toCity,
+    required this.departureTime,
+    required this.arrivalTime,
+    required this.busName,
   });
 
   @override
@@ -22,14 +32,7 @@ class _CheckOutState extends State<CheckOut> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-
-  final List<String> stations = [
-    "Station 1",
-    "Station 2",
-    "Station 3",
-    "Station 4",
-    "Station 5",
-  ];
+  final List<String> stations = ["Station 1", "Station 2", "Station 3", "Station 4", "Station 5"];
 
   void _validateAndProceed() {
     if (_formKey.currentState!.validate()) {
@@ -53,13 +56,7 @@ class _CheckOutState extends State<CheckOut> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Checkout",
-          style: TextStyle(
-            color: Colors.red,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: const Text("Checkout", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
@@ -76,46 +73,33 @@ class _CheckOutState extends State<CheckOut> {
               children: [
                 const Text(
                   "Passenger Details",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
                 ),
                 const SizedBox(height: 16),
-
-                buildInputField(
+                _buildInputField(
                   controller: _nameController,
                   label: "Full Name",
                   hint: "Enter your full name",
                   icon: Icons.person,
                 ),
-
                 const SizedBox(height: 16),
-
-                buildInputField(
+                _buildInputField(
                   controller: _emailController,
                   label: "Email Address",
                   hint: "Enter your email",
                   icon: Icons.email,
                   keyboardType: TextInputType.emailAddress,
                 ),
-
                 const SizedBox(height: 16),
-
-                buildInputField(
+                _buildInputField(
                   controller: _phoneController,
                   label: "Phone Number",
                   hint: "Enter your phone number",
                   icon: Icons.phone,
                   keyboardType: TextInputType.phone,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'^[\d+]+$')),
-                  ],
+                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^[\d+]+$'))],
                 ),
-
                 const SizedBox(height: 16),
-
                 const Text(
                   "Pickup Station",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -128,28 +112,21 @@ class _CheckOutState extends State<CheckOut> {
                       children: [
                         DropdownButtonFormField<String>(
                           value: _selectedPickupStation,
-                          items: stations.map((station) {
-                            return DropdownMenuItem(
-                              value: station,
-                              child: Text(station),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedPickupStation = value;
-                              state.didChange(value);
-                            });
-                          },
+                          items: stations.map((station) => DropdownMenuItem(
+                            value: station,
+                            child: Text(station),
+                          )).toList(),
+                          onChanged: (value) => setState(() {
+                            _selectedPickupStation = value;
+                            state.didChange(value);
+                          }),
                           decoration: InputDecoration(
                             contentPadding: const EdgeInsets.symmetric(vertical: 10),
                             fillColor: Colors.white,
                             filled: true,
                             hintText: 'Select your pickup station...',
                             hintStyle: const TextStyle(color: Colors.black45),
-                            prefixIcon: const Icon(
-                              Icons.location_on,
-                              color: Colors.black54,
-                            ),
+                            prefixIcon: const Icon(Icons.location_on, color: Colors.black54),
                             border: OutlineInputBorder(
                               borderSide: const BorderSide(color: Colors.black12),
                               borderRadius: BorderRadius.circular(10),
@@ -159,57 +136,40 @@ class _CheckOutState extends State<CheckOut> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          validator: (value) {
-                            if (value == null) {
-                              return "Please select a pickup station";
-                            }
-                            return null;
-                          },
+                          validator: (value) => value == null ? "Please select a pickup station" : null,
                         ),
                         if (state.hasError)
                           Padding(
                             padding: const EdgeInsets.only(top: 8.0),
-                            child: Text(
-                              state.errorText!,
-                              style: TextStyle(
-                                color: Colors.red,
-                                fontSize: 12,
-                              ),
-                            ),
+                            child: Text(state.errorText!, style: const TextStyle(color: Colors.red, fontSize: 12)),
                           ),
                       ],
                     );
                   },
                 ),
                 const SizedBox(height: 16),
-                
-                // TicketStatus with required parameters
-                TicketStatus(
+               TicketStatus(
                   selectedSeats: widget.selectedSeats,
                   totalPrice: widget.totalAmount,
+                  fromCity: widget.fromCity,
+                  toCity: widget.toCity,
+                  departureTime: widget.departureTime,
+                  arrivalTime: widget.arrivalTime,  // Make sure this is passed
+                  busName: widget.busName,
                 ),
-                
                 const SizedBox(height: 16),
-
-                // Proceed to Pay Button
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _validateAndProceed,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.orange,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                     ),
                     child: const Text(
                       "PROCEED TO PAY",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                   ),
                 ),
@@ -221,7 +181,7 @@ class _CheckOutState extends State<CheckOut> {
     );
   }
 
-  Widget buildInputField({
+  Widget _buildInputField({
     required TextEditingController controller,
     required String label,
     required String hint,
@@ -232,10 +192,7 @@ class _CheckOutState extends State<CheckOut> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
+        Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         TextFormField(
           controller: controller,
@@ -251,12 +208,7 @@ class _CheckOutState extends State<CheckOut> {
               borderSide: BorderSide.none,
             ),
           ),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return "Please enter your $label";
-            }
-            return null;
-          },
+          validator: (value) => value == null || value.isEmpty ? "Please enter your $label" : null,
         ),
       ],
     );

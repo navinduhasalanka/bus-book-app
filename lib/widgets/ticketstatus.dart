@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
 
 class TicketStatus extends StatelessWidget {
-  final List<int> selectedSeats;
+  final List<String> selectedSeats;
   final int totalPrice;
-  
+  final String fromCity;
+  final String toCity;
+  final String departureTime;
+  final String arrivalTime;
+  final String busName;
+
   const TicketStatus({
-    super.key, 
+    super.key,
     required this.selectedSeats,
     required this.totalPrice,
+    required this.fromCity,
+    required this.toCity,
+    required this.departureTime,
+    required this.arrivalTime,
+    required this.busName,
   });
 
   @override
@@ -19,7 +29,7 @@ class TicketStatus extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: Colors.grey.shade400, // Grey border
+            color: Colors.grey.shade400,
             width: 2.0,
           ),
           boxShadow: [
@@ -33,13 +43,13 @@ class TicketStatus extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: const Text(
+            const Center(
+              child: Text(
                 'Your Ticket Report Status',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w900,
-                  color: Colors.black, // Dark black title
+                  color: Colors.black,
                 ),
               ),
             ),
@@ -51,7 +61,7 @@ class TicketStatus extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
-                color: Colors.black, // Middle black for section title
+                color: Colors.black,
               ),
             ),
             const SizedBox(height: 12),
@@ -64,22 +74,22 @@ class TicketStatus extends StatelessWidget {
                       Text(
                         'From',
                         style: TextStyle(
-                          color: Colors.grey[600], // Grey for 'From'
+                          color: Colors.grey[600],
                           fontSize: 14,
                         ),
                       ),
                       Text(
-                        'Matara',
-                        style: TextStyle(
-                          color: Colors.black, // Grey for 'From'
+                        fromCity,
+                        style: const TextStyle(
+                          color: Colors.black,
                           fontSize: 16,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '06:15 pm',
+                        departureTime,
                         style: TextStyle(
-                          color: Colors.grey[600], // Light black for city names
+                          color: Colors.grey[600],
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
@@ -94,22 +104,22 @@ class TicketStatus extends StatelessWidget {
                       Text(
                         'To',
                         style: TextStyle(
-                          color: Colors.grey[600], // Light black for city names
+                          color: Colors.grey[600],
                           fontSize: 14,
                         ),
                       ),
                       Text(
-                        'Kaduwela',
-                        style: TextStyle(
-                          color: Colors.black, // Grey for 'To'
+                        toCity,
+                        style: const TextStyle(
+                          color: Colors.black,
                           fontSize: 16,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '08:45 am',
+                        arrivalTime,
                         style: TextStyle(
-                          color: Colors.grey[600], // Light black for city names
+                          color: Colors.grey[600],
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
@@ -126,26 +136,25 @@ class TicketStatus extends StatelessWidget {
                   'Bus No.   : ',
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.black, // Middle black
+                    color: Colors.black,
                   ),
                 ),
-                const Text(
-                  'NB 4543',
-                  style: TextStyle(
+                Text(
+                  busName,
+                  style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: Colors.black, // Middle black
+                    color: Colors.black,
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 24),
-            // Border around "Your Seats"
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Colors.grey.shade400, // Grey border
+                  color: Colors.grey.shade400,
                   width: 2.0,
                 ),
                 borderRadius: BorderRadius.circular(8),
@@ -158,7 +167,7 @@ class TicketStatus extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: Colors.black87, // Middle black
+                      color: Colors.black87,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -166,27 +175,26 @@ class TicketStatus extends StatelessWidget {
                     spacing: 8,
                     runSpacing: 8,
                     children: selectedSeats.isEmpty
-                      ? [
-                          const Text(
-                            'No seats selected',
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 14,
-                            ),
-                          )
-                        ]
-                      : selectedSeats.map((seatNumber) => _buildSeatChip(seatNumber.toString())).toList(),
+                        ? [
+                            const Text(
+                              'No seats selected',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 14,
+                              ),
+                            )
+                          ]
+                        : selectedSeats.map((seatNumber) => _buildSeatChip(seatNumber)).toList(),
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 24),
-            // Border around "Total Fare Price"
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Colors.grey.shade400, // Grey border
+                  color: Colors.grey.shade400,
                   width: 2.0,
                 ),
                 borderRadius: BorderRadius.circular(8),
@@ -199,7 +207,7 @@ class TicketStatus extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
-                      color: Colors.black87, // Middle black
+                      color: Colors.black87,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -212,7 +220,7 @@ class TicketStatus extends StatelessWidget {
                             TextSpan(
                               text: 'Total Price:\n',
                               style: TextStyle(
-                                color: Colors.black87, // Lighter grey for label
+                                color: Colors.black87,
                                 fontSize: 15,
                               ),
                             ),
@@ -220,7 +228,7 @@ class TicketStatus extends StatelessWidget {
                               text: '(Including all taxes)',
                               style: TextStyle(
                                 color: Colors.black87,
-                                fontWeight: FontWeight.w300, // Keep the same lighter grey
+                                fontWeight: FontWeight.w300,
                                 fontSize: 13,
                               ),
                             ),
@@ -232,7 +240,7 @@ class TicketStatus extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black, // Middle black for price
+                          color: Colors.black,
                         ),
                       ),
                     ],
@@ -258,7 +266,7 @@ class TicketStatus extends StatelessWidget {
         style: const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w500,
-          color: Colors.black, // Middle black for seat numbers
+          color: Colors.black,
         ),
       ),
     );

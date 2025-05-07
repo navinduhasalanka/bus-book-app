@@ -1,326 +1,187 @@
-import 'package:bus_book/screens/pages/checkout.dart';
 import 'package:flutter/material.dart';
+import 'package:bus_book/screens/pages/checkout.dart';
 
 class SeatView extends StatefulWidget {
-  const SeatView({super.key});
+  final List<Map<String, dynamic>> seats;
+  final String busName;
+  final String fromCity;
+  final String toCity;
+  final String departureTime;
+  final String arrivalTime;
+  final String departureDate;
+  final int ticketPrice;
+  final List<Map<String, dynamic>> busCitiesAndTimes;
+
+  const SeatView({
+    super.key,
+    required this.seats,
+    required this.busName,
+    required this.fromCity,
+    required this.toCity,
+    required this.departureTime,
+    required this.arrivalTime,
+    required this.departureDate,
+    required this.ticketPrice,
+    required this.busCitiesAndTimes,
+  });
 
   @override
   _SeatViewState createState() => _SeatViewState();
 }
 
 class _SeatViewState extends State<SeatView> {
-  Set<int> selectedSeats = {}; // Store selected seats
-  Set<int> bookedSeats = {4, 7, 27, 43, 23, 34}; // Booked seats (red)
-  int seatPrice = 500; // Price per seat
-  int maxSeats = 10; // Maximum number of seats a user can select
+  Set<String> selectedSeats = {};
+  final int maxSeats = 10;
 
   @override
   Widget build(BuildContext context) {
+    final bookedSeats = widget.seats
+        .where((seat) => seat['availability'] == 'booked')
+        .map((seat) => seat['seatNumber'].toString())
+        .toSet();
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Select Seat',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        title: const Text('Select Seat', style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
         ),
       ),
       body: Column(
         children: [
-          // Section 1: Travel Details
           Container(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16),
             color: Colors.grey[200],
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'SAMARASINGHE TRAVELS',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                    Text(
-                      '08:00 AM',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
+                    Text(widget.busName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                    Text(widget.departureTime, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   ],
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Matara - Kaduwela',
-                      style: TextStyle(fontSize: 14, color: Colors.grey),
-                    ),
-                    Text(
-                      'January 14, 2025',
-                      style: TextStyle(fontSize: 14, color: Colors.grey),
-                    ),
+                    Text('${widget.fromCity} - ${widget.toCity}', style: const TextStyle(fontSize: 14, color: Colors.grey)),
+                    Text(widget.departureDate, style: const TextStyle(fontSize: 14, color: Colors.grey)),
                   ],
                 ),
               ],
             ),
           ),
-
-          // Section 2: Front Label
-          const SizedBox(height: 8.0),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12.0),
-              decoration: BoxDecoration(
-                color: Colors.red[100],
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: const Center(
-                child: Text(
-                  'Front',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.black),
-                ),
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 8.0),
-
-          // Section 3: Scrollable Seat Grid
           Expanded(
             child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Column(
-                  children: [
-                    for (int i = 0; i < 44; i += 4)
-                      Column(
+              padding: const EdgeInsets.all(16),
+              child: Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                children: widget.seats.map((seatData) {
+                  final seatNumber = seatData['seatNumber'].toString();
+                  final isBooked = bookedSeats.contains(seatNumber);
+                  final isSelected = selectedSeats.contains(seatNumber);
+
+                  return GestureDetector(
+                    onTap: () {
+                      if (isBooked) return;
+                      setState(() {
+                        if (isSelected) {
+                          selectedSeats.remove(seatNumber);
+                        } else if (selectedSeats.length < maxSeats) {
+                          selectedSeats.add(seatNumber);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Maximum 10 seats can be selected'), duration: Duration(seconds: 2)));
+                        }
+                      });
+                    },
+                    child: Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: isBooked ? Colors.red[100] : isSelected ? Colors.blue[200] : Colors.green[100],
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: isBooked ? Colors.red : Colors.green, width: 1.5),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              for (int j = 0; j < 2; j++) _buildSeat(i + j + 1),
-                              const SizedBox(width: 20),
-                              for (int j = 2; j < 4; j++) _buildSeat(i + j + 1),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
+                          const Icon(Icons.event_seat, size: 24),
+                          Text(seatNumber, style: const TextStyle(fontWeight: FontWeight.bold)),
                         ],
                       ),
-
-                    // Last row with 5 seats (no middle gap)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        for (int i = 44; i < 49; i++) _buildSeat(i + 1),
-                      ],
                     ),
-                  ],
-                ),
+                  );
+                }).toList(),
               ),
             ),
           ),
-
-          // Section 4: Bottom Bar (Seat info + price remains)
           Container(
+            padding: const EdgeInsets.all(16),
             color: Colors.white,
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Display selected seats dynamically (Scrollable Row)
-                    selectedSeats.isEmpty
-                        ? const Text(
-                            'No seats selected',
-                            style: TextStyle(color: Colors.grey),
-                          )
-                        : SizedBox(
-                            height: 35, // Keeps height fixed
-                            child: Container(
-                              width: 250, // Limit the container width to 234px
-                              height: 38, // Fixed height of 200px
-                              child: SingleChildScrollView(
-                                scrollDirection: Axis
-                                    .horizontal, // Enables horizontal scrolling
-                                child: Row(
-                                  children: selectedSeats
-                                      .map(
-                                        (seat) => Container(
-                                          width: 30, // Fixed width for each box
-                                          height: 35, // Fixed height for each box
-                                          margin: const EdgeInsets.symmetric(
-                                              horizontal: 2.0),
-                                          decoration: BoxDecoration(
-                                            color: Colors.blue[100],
-                                            borderRadius:
-                                                BorderRadius.circular(6.0),
-                                            border:
-                                                Border.all(color: Colors.blue),
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              '$seat',
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black),
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                      .toList(),
-                                ),
+                    if (selectedSeats.isNotEmpty)
+                      SizedBox(
+                        width: 250,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: selectedSeats.map((seat) => Container(
+                              margin: const EdgeInsets.only(right: 8),
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: Colors.blue[100],
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(color: Colors.blue),
                               ),
-                            ),
+                              child: Text(seat),
+                            )).toList(),
                           ),
-
-                    const SizedBox(height: 4),
-
-                    // Update total price with moderate font size
-                    Text(
-                      'LKR ${selectedSeats.length * seatPrice}.00',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red,
-                        fontSize:
-                            16, // Adjusted font size to be large but not overwhelming
+                        ),
                       ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'LKR ${selectedSeats.length * widget.ticketPrice}',
+                      style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.red, fontSize: 16),
                     ),
                   ],
                 ),
-                GestureDetector(
-                  onTap: selectedSeats.isNotEmpty
-                      ? () {
-                          // Navigate to CheckOutPage when button is tapped
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CheckOut(
-                                selectedSeats: selectedSeats.toList(), // Passing selected seats
-                                totalAmount: selectedSeats.length * seatPrice, // Passing total amount
-                              ),
-                            ),
-                          );
-                        }
-                      : null, // Disable if no seats selected
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 11), // Button padding
-                    decoration: BoxDecoration(
-                      gradient: selectedSeats.isNotEmpty
-                          ? LinearGradient(
-                              colors: [
-                                Color(0xFF880000), // Medium red
-                                Color(0xFF9E0000), // Lighter red
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            )
-                          : LinearGradient(
-                              colors: [
-                                Color(0xFFB0B0B0), // Light grey
-                                Color(0xFFD0D0D0), // Lighter grey
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                      borderRadius:
-                          BorderRadius.circular(15.0), // Rounded corners
-                    ),
-                    child: const Text(
-                      'CHECKOUT',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white, // White text color
-                        fontSize: 16, // Adjust font size as needed
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: selectedSeats.isNotEmpty ? const Color(0xFF9E0000) : Colors.grey,
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  ),
+                  onPressed: selectedSeats.isNotEmpty ? () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CheckOut(
+                        selectedSeats: selectedSeats.toList(),
+                        totalAmount: selectedSeats.length * widget.ticketPrice,
+                        fromCity: widget.fromCity,  // Pass these values
+                        toCity: widget.toCity,
+                        departureTime: widget.departureTime,
+                        arrivalTime: widget.arrivalTime, // Or pass from SeatView's parameters
+                        busName: widget.busName,
                       ),
                     ),
-                  ),
+                  ) : null,
+                  child: const Text('CHECKOUT', style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  /// Function to build seat widgets
-  Widget _buildSeat(int seatNumber) {
-    bool isBooked = bookedSeats.contains(seatNumber);
-    bool isSelected = selectedSeats.contains(seatNumber);
-
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          if (isBooked) {
-            // Show booked seat warning
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('This seat is already booked'),
-                duration: Duration(seconds: 2),
-              ),
-            );
-          } else if (selectedSeats.contains(seatNumber)) {
-            // Toggle seat selection (remove seat if selected again)
-            selectedSeats.remove(seatNumber);
-          } else if (selectedSeats.length >= maxSeats) {
-            // Show warning when trying to select more than max seats
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Maximum 10 seats can be selected'),
-                duration: Duration(seconds: 2),
-              ),
-            );
-          } else {
-            // Add seat to selection
-            selectedSeats.add(seatNumber);
-          }
-        });
-      },
-      child: Container(
-        width: 60, // Fixed width for all seats
-        height: 70, // Fixed height for all seats
-        margin: const EdgeInsets.only(bottom: 12),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8.0),
-          border: Border.all(color: isBooked ? Colors.red : Colors.green),
-          color: isBooked
-              ? Colors.red[100] // Booked seat (Red)
-              : (isSelected
-                  ? Colors.blue[200]
-                  : Colors.green[100]), // Selected seats turn blue
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.event_seat,
-              size: 24,
-              color: Colors.black,
-            ),
-            Text(
-              '$seatNumber',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-                color: Colors.black,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
